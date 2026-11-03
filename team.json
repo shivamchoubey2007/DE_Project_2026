@@ -1,0 +1,27 @@
+{
+  "team_number": "T0080",
+  "group_lead": {
+    "name": "Anurag Choubey",
+    "enrollment_no": "2501010074",
+    "github": "AnuragChoubey-45"
+  },
+  "members": [
+    {
+      "name": "Shivam Choubey",
+      "enrollment_no": "2501010426",
+      "github": "shivamchoubey2007"
+    },
+    {
+      "name": "Sankalp Tripathi",
+      "enrollment_no": "2501010404",
+      "github": "sankalp-tripath12"
+    },
+    {
+      "name": "Vishal Kumar Mishra",
+      "enrollment_no": "2501010715",
+      "github": "vishal-mishra-10"
+    }
+  ],
+  "postgres_version": "18.6 (Homebrew)",
+  "laptop_used_for_benchmarks": "mackbook pro m4"
+}
