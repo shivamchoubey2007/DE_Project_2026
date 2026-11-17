@@ -1,0 +1,39 @@
+=== R22 run 1 ===
+Limit  (cost=12233.03..12233.09 rows=25 width=36) (actual time=45.802..45.806 rows=25.00 loops=1)
+  Buffers: shared hit=1099, temp read=530 written=727
+  ->  Sort  (cost=12108.03..12403.89 rows=118343 width=36) (actual time=41.011..44.110 rows=50025.00 loops=1)
+        Sort Key: created_at DESC
+        Sort Method: external merge  Disk: 5800kB
+        Buffers: shared hit=1099, temp read=530 written=727
+        ->  Seq Scan on wallet_transactions  (cost=0.00..2279.43 rows=118343 width=36) (actual time=0.009..11.882 rows=118343.00 loops=1)
+              Buffers: shared hit=1096
+Planning:
+  Buffers: shared hit=91
+Planning Time: 0.293 ms
+Execution Time: 46.944 ms
+=== R22 run 2 ===
+Limit  (cost=12233.03..12233.09 rows=25 width=36) (actual time=46.803..46.807 rows=25.00 loops=1)
+  Buffers: shared hit=1099, temp read=530 written=727
+  ->  Sort  (cost=12108.03..12403.89 rows=118343 width=36) (actual time=42.036..45.108 rows=50025.00 loops=1)
+        Sort Key: created_at DESC
+        Sort Method: external merge  Disk: 5800kB
+        Buffers: shared hit=1099, temp read=530 written=727
+        ->  Seq Scan on wallet_transactions  (cost=0.00..2279.43 rows=118343 width=36) (actual time=0.010..11.929 rows=118343.00 loops=1)
+              Buffers: shared hit=1096
+Planning:
+  Buffers: shared hit=91
+Planning Time: 0.298 ms
+Execution Time: 48.518 ms
+=== R22 run 3 ===
+Limit  (cost=12233.03..12233.09 rows=25 width=36) (actual time=46.129..46.133 rows=25.00 loops=1)
+  Buffers: shared hit=1099, temp read=530 written=727
+  ->  Sort  (cost=12108.03..12403.89 rows=118343 width=36) (actual time=41.404..44.456 rows=50025.00 loops=1)
+        Sort Key: created_at DESC
+        Sort Method: external merge  Disk: 5800kB
+        Buffers: shared hit=1099, temp read=530 written=727
+        ->  Seq Scan on wallet_transactions  (cost=0.00..2279.43 rows=118343 width=36) (actual time=0.009..11.800 rows=118343.00 loops=1)
+              Buffers: shared hit=1096
+Planning:
+  Buffers: shared hit=91
+Planning Time: 0.286 ms
+Execution Time: 47.850 ms
