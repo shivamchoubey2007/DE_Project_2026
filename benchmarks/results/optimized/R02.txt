@@ -1,0 +1,204 @@
+=== R02 run 1 ===
+Sort  (cost=16295.71..16314.34 rows=7452 width=60) (actual time=58.402..58.407 rows=46.00 loops=1)
+  Sort Key: (round(((100.0 * (count(utp.user_team_id))::numeric) / (NULLIF((InitPlan 1).col1, 0))::numeric), 1)) DESC
+  Sort Method: quicksort  Memory: 27kB
+  Buffers: shared hit=365 read=1206
+  InitPlan 1
+    ->  Aggregate  (cost=346.61..346.62 rows=1 width=8) (actual time=0.196..0.197 rows=1.00 loops=1)
+          Buffers: shared hit=176
+          ->  Bitmap Heap Scan on user_teams  (cost=6.31..345.96 rows=261 width=0) (actual time=0.051..0.182 rows=255.00 loops=1)
+                Recheck Cond: (match_id = 207)
+                Heap Blocks: exact=174
+                Buffers: shared hit=176
+                ->  Bitmap Index Scan on idx_user_teams_match_id  (cost=0.00..6.25 rows=261 width=0) (actual time=0.027..0.027 rows=255.00 loops=1)
+                      Index Cond: (match_id = 207)
+                      Index Searches: 1
+                      Buffers: shared hit=2
+  ->  HashAggregate  (cost=15283.49..15469.79 rows=7452 width=60) (actual time=58.289..58.371 rows=46.00 loops=1)
+        Group Key: p.player_id, t.short_name
+        Batches: 1  Memory Usage: 289kB
+        Buffers: shared hit=362 read=1206
+        ->  Merge Right Join  (cost=1309.70..15195.41 rows=11745 width=32) (actual time=6.518..56.391 rows=11730.00 loops=1)
+              Merge Cond: ((utp.user_team_id = ut.user_team_id) AND (utp.player_id = p.player_id))
+              Buffers: shared hit=186 read=1206
+              ->  Index Only Scan using pk_user_team_players on user_team_players utp  (cost=0.42..11595.55 rows=439925 width=8) (actual time=0.006..30.637 rows=437460.00 loops=1)
+                    Heap Fetches: 0
+                    Index Searches: 1
+                    Buffers: shared hit=4 read=1204
+              ->  Sort  (cost=1309.28..1338.64 rows=11745 width=32) (actual time=5.771..6.197 rows=11730.00 loops=1)
+                    Sort Key: ut.user_team_id, p.player_id
+                    Sort Method: quicksort  Memory: 1004kB
+                    Buffers: shared hit=182 read=2
+                    ->  Nested Loop Left Join  (cost=7.72..515.33 rows=11745 width=32) (actual time=0.346..2.140 rows=11730.00 loops=1)
+                          Buffers: shared hit=182 read=2
+                          ->  Hash Join  (cost=1.41..21.91 rows=45 width=32) (actual time=0.073..0.109 rows=46.00 loops=1)
+                                Hash Cond: (p.team_id = t.team_id)
+                                Buffers: shared hit=8
+                                ->  Nested Loop  (cost=0.00..20.36 rows=45 width=33) (actual time=0.057..0.084 rows=46.00 loops=1)
+                                      Join Filter: ((p.team_id = m.home_team_id) OR (p.team_id = m.away_team_id))
+                                      Rows Removed by Join Filter: 368
+                                      Buffers: shared hit=7
+                                      ->  Seq Scan on matches m  (cost=0.00..5.65 rows=1 width=12) (actual time=0.019..0.020 rows=1.00 loops=1)
+                                            Filter: (match_id = 207)
+                                            Rows Removed by Filter: 211
+                                            Buffers: shared hit=3
+                                      ->  Seq Scan on players p  (cost=0.00..8.50 rows=414 width=29) (actual time=0.003..0.039 rows=414.00 loops=1)
+                                            Filter: is_active
+                                            Rows Removed by Filter: 36
+                                            Buffers: shared hit=4
+                                ->  Hash  (cost=1.18..1.18 rows=18 width=7) (actual time=0.009..0.010 rows=18.00 loops=1)
+                                      Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                      Buffers: shared hit=1
+                                      ->  Seq Scan on teams t  (cost=0.00..1.18 rows=18 width=7) (actual time=0.003..0.004 rows=18.00 loops=1)
+                                            Buffers: shared hit=1
+                          ->  Materialize  (cost=6.31..347.26 rows=261 width=8) (actual time=0.006..0.025 rows=255.00 loops=46)
+                                Storage: Memory  Maximum Storage: 24kB
+                                Buffers: shared hit=174 read=2
+                                ->  Bitmap Heap Scan on user_teams ut  (cost=6.31..345.96 rows=261 width=8) (actual time=0.267..0.702 rows=255.00 loops=1)
+                                      Recheck Cond: (match_id = 207)
+                                      Heap Blocks: exact=174
+                                      Buffers: shared hit=174 read=2
+                                      ->  Bitmap Index Scan on idx_user_teams_match_id  (cost=0.00..6.25 rows=261 width=0) (actual time=0.245..0.245 rows=255.00 loops=1)
+                                            Index Cond: (match_id = 207)
+                                            Index Searches: 1
+                                            Buffers: shared read=2
+Planning:
+  Buffers: shared hit=364 read=20
+Planning Time: 3.868 ms
+Execution Time: 58.701 ms
+=== R02 run 2 ===
+Sort  (cost=16295.71..16314.34 rows=7452 width=60) (actual time=54.127..54.134 rows=46.00 loops=1)
+  Sort Key: (round(((100.0 * (count(utp.user_team_id))::numeric) / (NULLIF((InitPlan 1).col1, 0))::numeric), 1)) DESC
+  Sort Method: quicksort  Memory: 27kB
+  Buffers: shared hit=1571
+  InitPlan 1
+    ->  Aggregate  (cost=346.61..346.62 rows=1 width=8) (actual time=0.240..0.240 rows=1.00 loops=1)
+          Buffers: shared hit=176
+          ->  Bitmap Heap Scan on user_teams  (cost=6.31..345.96 rows=261 width=0) (actual time=0.054..0.227 rows=255.00 loops=1)
+                Recheck Cond: (match_id = 207)
+                Heap Blocks: exact=174
+                Buffers: shared hit=176
+                ->  Bitmap Index Scan on idx_user_teams_match_id  (cost=0.00..6.25 rows=261 width=0) (actual time=0.022..0.022 rows=255.00 loops=1)
+                      Index Cond: (match_id = 207)
+                      Index Searches: 1
+                      Buffers: shared hit=2
+  ->  HashAggregate  (cost=15283.49..15469.79 rows=7452 width=60) (actual time=54.015..54.099 rows=46.00 loops=1)
+        Group Key: p.player_id, t.short_name
+        Batches: 1  Memory Usage: 289kB
+        Buffers: shared hit=1568
+        ->  Merge Right Join  (cost=1309.70..15195.41 rows=11745 width=32) (actual time=5.436..52.030 rows=11730.00 loops=1)
+              Merge Cond: ((utp.user_team_id = ut.user_team_id) AND (utp.player_id = p.player_id))
+              Buffers: shared hit=1392
+              ->  Index Only Scan using pk_user_team_players on user_team_players utp  (cost=0.42..11595.55 rows=439925 width=8) (actual time=0.005..26.963 rows=437460.00 loops=1)
+                    Heap Fetches: 0
+                    Index Searches: 1
+                    Buffers: shared hit=1208
+              ->  Sort  (cost=1309.28..1338.64 rows=11745 width=32) (actual time=5.257..5.682 rows=11730.00 loops=1)
+                    Sort Key: ut.user_team_id, p.player_id
+                    Sort Method: quicksort  Memory: 1004kB
+                    Buffers: shared hit=184
+                    ->  Nested Loop Left Join  (cost=7.72..515.33 rows=11745 width=32) (actual time=0.114..1.743 rows=11730.00 loops=1)
+                          Buffers: shared hit=184
+                          ->  Hash Join  (cost=1.41..21.91 rows=45 width=32) (actual time=0.073..0.109 rows=46.00 loops=1)
+                                Hash Cond: (p.team_id = t.team_id)
+                                Buffers: shared hit=8
+                                ->  Nested Loop  (cost=0.00..20.36 rows=45 width=33) (actual time=0.057..0.083 rows=46.00 loops=1)
+                                      Join Filter: ((p.team_id = m.home_team_id) OR (p.team_id = m.away_team_id))
+                                      Rows Removed by Join Filter: 368
+                                      Buffers: shared hit=7
+                                      ->  Seq Scan on matches m  (cost=0.00..5.65 rows=1 width=12) (actual time=0.018..0.020 rows=1.00 loops=1)
+                                            Filter: (match_id = 207)
+                                            Rows Removed by Filter: 211
+                                            Buffers: shared hit=3
+                                      ->  Seq Scan on players p  (cost=0.00..8.50 rows=414 width=29) (actual time=0.003..0.038 rows=414.00 loops=1)
+                                            Filter: is_active
+                                            Rows Removed by Filter: 36
+                                            Buffers: shared hit=4
+                                ->  Hash  (cost=1.18..1.18 rows=18 width=7) (actual time=0.009..0.010 rows=18.00 loops=1)
+                                      Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                      Buffers: shared hit=1
+                                      ->  Seq Scan on teams t  (cost=0.00..1.18 rows=18 width=7) (actual time=0.003..0.005 rows=18.00 loops=1)
+                                            Buffers: shared hit=1
+                          ->  Materialize  (cost=6.31..347.26 rows=261 width=8) (actual time=0.001..0.016 rows=255.00 loops=46)
+                                Storage: Memory  Maximum Storage: 24kB
+                                Buffers: shared hit=176
+                                ->  Bitmap Heap Scan on user_teams ut  (cost=6.31..345.96 rows=261 width=8) (actual time=0.036..0.296 rows=255.00 loops=1)
+                                      Recheck Cond: (match_id = 207)
+                                      Heap Blocks: exact=174
+                                      Buffers: shared hit=176
+                                      ->  Bitmap Index Scan on idx_user_teams_match_id  (cost=0.00..6.25 rows=261 width=0) (actual time=0.016..0.016 rows=255.00 loops=1)
+                                            Index Cond: (match_id = 207)
+                                            Index Searches: 1
+                                            Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=384
+Planning Time: 1.389 ms
+Execution Time: 54.282 ms
+=== R02 run 3 ===
+Sort  (cost=16295.71..16314.34 rows=7452 width=60) (actual time=58.742..58.748 rows=46.00 loops=1)
+  Sort Key: (round(((100.0 * (count(utp.user_team_id))::numeric) / (NULLIF((InitPlan 1).col1, 0))::numeric), 1)) DESC
+  Sort Method: quicksort  Memory: 27kB
+  Buffers: shared hit=1571
+  InitPlan 1
+    ->  Aggregate  (cost=346.61..346.62 rows=1 width=8) (actual time=0.234..0.235 rows=1.00 loops=1)
+          Buffers: shared hit=176
+          ->  Bitmap Heap Scan on user_teams  (cost=6.31..345.96 rows=261 width=0) (actual time=0.063..0.221 rows=255.00 loops=1)
+                Recheck Cond: (match_id = 207)
+                Heap Blocks: exact=174
+                Buffers: shared hit=176
+                ->  Bitmap Index Scan on idx_user_teams_match_id  (cost=0.00..6.25 rows=261 width=0) (actual time=0.029..0.030 rows=255.00 loops=1)
+                      Index Cond: (match_id = 207)
+                      Index Searches: 1
+                      Buffers: shared hit=2
+  ->  HashAggregate  (cost=15283.49..15469.79 rows=7452 width=60) (actual time=58.650..58.715 rows=46.00 loops=1)
+        Group Key: p.player_id, t.short_name
+        Batches: 1  Memory Usage: 289kB
+        Buffers: shared hit=1568
+        ->  Merge Right Join  (cost=1309.70..15195.41 rows=11745 width=32) (actual time=5.655..54.532 rows=11730.00 loops=1)
+              Merge Cond: ((utp.user_team_id = ut.user_team_id) AND (utp.player_id = p.player_id))
+              Buffers: shared hit=1392
+              ->  Index Only Scan using pk_user_team_players on user_team_players utp  (cost=0.42..11595.55 rows=439925 width=8) (actual time=0.005..28.542 rows=437460.00 loops=1)
+                    Heap Fetches: 0
+                    Index Searches: 1
+                    Buffers: shared hit=1208
+              ->  Sort  (cost=1309.28..1338.64 rows=11745 width=32) (actual time=5.473..5.938 rows=11730.00 loops=1)
+                    Sort Key: ut.user_team_id, p.player_id
+                    Sort Method: quicksort  Memory: 1004kB
+                    Buffers: shared hit=184
+                    ->  Nested Loop Left Join  (cost=7.72..515.33 rows=11745 width=32) (actual time=0.120..1.776 rows=11730.00 loops=1)
+                          Buffers: shared hit=184
+                          ->  Hash Join  (cost=1.41..21.91 rows=45 width=32) (actual time=0.077..0.116 rows=46.00 loops=1)
+                                Hash Cond: (p.team_id = t.team_id)
+                                Buffers: shared hit=8
+                                ->  Nested Loop  (cost=0.00..20.36 rows=45 width=33) (actual time=0.060..0.087 rows=46.00 loops=1)
+                                      Join Filter: ((p.team_id = m.home_team_id) OR (p.team_id = m.away_team_id))
+                                      Rows Removed by Join Filter: 368
+                                      Buffers: shared hit=7
+                                      ->  Seq Scan on matches m  (cost=0.00..5.65 rows=1 width=12) (actual time=0.019..0.020 rows=1.00 loops=1)
+                                            Filter: (match_id = 207)
+                                            Rows Removed by Filter: 211
+                                            Buffers: shared hit=3
+                                      ->  Seq Scan on players p  (cost=0.00..8.50 rows=414 width=29) (actual time=0.004..0.042 rows=414.00 loops=1)
+                                            Filter: is_active
+                                            Rows Removed by Filter: 36
+                                            Buffers: shared hit=4
+                                ->  Hash  (cost=1.18..1.18 rows=18 width=7) (actual time=0.009..0.010 rows=18.00 loops=1)
+                                      Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                      Buffers: shared hit=1
+                                      ->  Seq Scan on teams t  (cost=0.00..1.18 rows=18 width=7) (actual time=0.003..0.004 rows=18.00 loops=1)
+                                            Buffers: shared hit=1
+                          ->  Materialize  (cost=6.31..347.26 rows=261 width=8) (actual time=0.001..0.017 rows=255.00 loops=46)
+                                Storage: Memory  Maximum Storage: 24kB
+                                Buffers: shared hit=176
+                                ->  Bitmap Heap Scan on user_teams ut  (cost=6.31..345.96 rows=261 width=8) (actual time=0.038..0.325 rows=255.00 loops=1)
+                                      Recheck Cond: (match_id = 207)
+                                      Heap Blocks: exact=174
+                                      Buffers: shared hit=176
+                                      ->  Bitmap Index Scan on idx_user_teams_match_id  (cost=0.00..6.25 rows=261 width=0) (actual time=0.017..0.017 rows=255.00 loops=1)
+                                            Index Cond: (match_id = 207)
+                                            Index Searches: 1
+                                            Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=384
+Planning Time: 1.504 ms
+Execution Time: 58.907 ms

@@ -1,0 +1,132 @@
+=== R12 run 1 ===
+Limit  (cost=174.40..174.45 rows=20 width=55) (actual time=1.689..1.693 rows=20.00 loops=1)
+  Buffers: shared hit=44
+  ->  Sort  (cost=174.40..175.69 rows=517 width=55) (actual time=1.688..1.690 rows=20.00 loops=1)
+        Sort Key: (round(avg(s.fantasy_points), 1)) DESC
+        Sort Method: top-N heapsort  Memory: 27kB
+        Buffers: shared hit=44
+        ->  HashAggregate  (cost=136.09..160.64 rows=517 width=55) (actual time=1.536..1.618 rows=230.00 loops=1)
+              Group Key: p.full_name, t.short_name
+              Filter: (count(*) >= 5)
+              Batches: 1  Memory Usage: 193kB
+              Buffers: shared hit=41
+              ->  Hash Join  (cost=22.11..120.58 rows=1551 width=20) (actual time=0.394..1.142 rows=1606.00 loops=1)
+                    Hash Cond: (p.team_id = t.team_id)
+                    Buffers: shared hit=41
+                    ->  Hash Join  (cost=20.70..114.14 rows=1551 width=21) (actual time=0.379..0.938 rows=1606.00 loops=1)
+                          Hash Cond: (s.player_id = p.player_id)
+                          Buffers: shared hit=40
+                          ->  Hash Join  (cost=6.58..95.91 rows=1551 width=9) (actual time=0.294..0.627 rows=1606.00 loops=1)
+                                Hash Cond: (s.match_id = m.match_id)
+                                Buffers: shared hit=36
+                                ->  Seq Scan on player_match_stats s  (cost=0.00..77.44 rows=4444 width=13) (actual time=0.005..0.242 rows=4444.00 loops=1)
+                                      Buffers: shared hit=33
+                                ->  Hash  (cost=5.65..5.65 rows=74 width=4) (actual time=0.026..0.026 rows=74.00 loops=1)
+                                      Buckets: 1024  Batches: 1  Memory Usage: 11kB
+                                      Buffers: shared hit=3
+                                      ->  Seq Scan on matches m  (cost=0.00..5.65 rows=74 width=4) (actual time=0.012..0.019 rows=74.00 loops=1)
+                                            Filter: ((tournament)::text = 'IPL 2026'::text)
+                                            Rows Removed by Filter: 138
+                                            Buffers: shared hit=3
+                          ->  Hash  (cost=8.50..8.50 rows=450 width=20) (actual time=0.079..0.079 rows=450.00 loops=1)
+                                Buckets: 1024  Batches: 1  Memory Usage: 32kB
+                                Buffers: shared hit=4
+                                ->  Seq Scan on players p  (cost=0.00..8.50 rows=450 width=20) (actual time=0.003..0.036 rows=450.00 loops=1)
+                                      Buffers: shared hit=4
+                    ->  Hash  (cost=1.18..1.18 rows=18 width=7) (actual time=0.010..0.010 rows=18.00 loops=1)
+                          Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                          Buffers: shared hit=1
+                          ->  Seq Scan on teams t  (cost=0.00..1.18 rows=18 width=7) (actual time=0.004..0.005 rows=18.00 loops=1)
+                                Buffers: shared hit=1
+Planning:
+  Buffers: shared hit=370 read=2
+Planning Time: 1.477 ms
+Execution Time: 1.774 ms
+=== R12 run 2 ===
+Limit  (cost=174.40..174.45 rows=20 width=55) (actual time=1.685..1.688 rows=20.00 loops=1)
+  Buffers: shared hit=44
+  ->  Sort  (cost=174.40..175.69 rows=517 width=55) (actual time=1.684..1.685 rows=20.00 loops=1)
+        Sort Key: (round(avg(s.fantasy_points), 1)) DESC
+        Sort Method: top-N heapsort  Memory: 27kB
+        Buffers: shared hit=44
+        ->  HashAggregate  (cost=136.09..160.64 rows=517 width=55) (actual time=1.532..1.614 rows=230.00 loops=1)
+              Group Key: p.full_name, t.short_name
+              Filter: (count(*) >= 5)
+              Batches: 1  Memory Usage: 193kB
+              Buffers: shared hit=41
+              ->  Hash Join  (cost=22.11..120.58 rows=1551 width=20) (actual time=0.402..1.148 rows=1606.00 loops=1)
+                    Hash Cond: (p.team_id = t.team_id)
+                    Buffers: shared hit=41
+                    ->  Hash Join  (cost=20.70..114.14 rows=1551 width=21) (actual time=0.385..0.942 rows=1606.00 loops=1)
+                          Hash Cond: (s.player_id = p.player_id)
+                          Buffers: shared hit=40
+                          ->  Hash Join  (cost=6.58..95.91 rows=1551 width=9) (actual time=0.296..0.632 rows=1606.00 loops=1)
+                                Hash Cond: (s.match_id = m.match_id)
+                                Buffers: shared hit=36
+                                ->  Seq Scan on player_match_stats s  (cost=0.00..77.44 rows=4444 width=13) (actual time=0.006..0.243 rows=4444.00 loops=1)
+                                      Buffers: shared hit=33
+                                ->  Hash  (cost=5.65..5.65 rows=74 width=4) (actual time=0.026..0.026 rows=74.00 loops=1)
+                                      Buckets: 1024  Batches: 1  Memory Usage: 11kB
+                                      Buffers: shared hit=3
+                                      ->  Seq Scan on matches m  (cost=0.00..5.65 rows=74 width=4) (actual time=0.012..0.019 rows=74.00 loops=1)
+                                            Filter: ((tournament)::text = 'IPL 2026'::text)
+                                            Rows Removed by Filter: 138
+                                            Buffers: shared hit=3
+                          ->  Hash  (cost=8.50..8.50 rows=450 width=20) (actual time=0.083..0.083 rows=450.00 loops=1)
+                                Buckets: 1024  Batches: 1  Memory Usage: 32kB
+                                Buffers: shared hit=4
+                                ->  Seq Scan on players p  (cost=0.00..8.50 rows=450 width=20) (actual time=0.003..0.037 rows=450.00 loops=1)
+                                      Buffers: shared hit=4
+                    ->  Hash  (cost=1.18..1.18 rows=18 width=7) (actual time=0.011..0.011 rows=18.00 loops=1)
+                          Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                          Buffers: shared hit=1
+                          ->  Seq Scan on teams t  (cost=0.00..1.18 rows=18 width=7) (actual time=0.004..0.005 rows=18.00 loops=1)
+                                Buffers: shared hit=1
+Planning:
+  Buffers: shared hit=372
+Planning Time: 1.291 ms
+Execution Time: 1.776 ms
+=== R12 run 3 ===
+Limit  (cost=174.40..174.45 rows=20 width=55) (actual time=1.802..1.806 rows=20.00 loops=1)
+  Buffers: shared hit=44
+  ->  Sort  (cost=174.40..175.69 rows=517 width=55) (actual time=1.800..1.803 rows=20.00 loops=1)
+        Sort Key: (round(avg(s.fantasy_points), 1)) DESC
+        Sort Method: top-N heapsort  Memory: 27kB
+        Buffers: shared hit=44
+        ->  HashAggregate  (cost=136.09..160.64 rows=517 width=55) (actual time=1.637..1.723 rows=230.00 loops=1)
+              Group Key: p.full_name, t.short_name
+              Filter: (count(*) >= 5)
+              Batches: 1  Memory Usage: 193kB
+              Buffers: shared hit=41
+              ->  Hash Join  (cost=22.11..120.58 rows=1551 width=20) (actual time=0.457..1.220 rows=1606.00 loops=1)
+                    Hash Cond: (p.team_id = t.team_id)
+                    Buffers: shared hit=41
+                    ->  Hash Join  (cost=20.70..114.14 rows=1551 width=21) (actual time=0.433..1.007 rows=1606.00 loops=1)
+                          Hash Cond: (s.player_id = p.player_id)
+                          Buffers: shared hit=40
+                          ->  Hash Join  (cost=6.58..95.91 rows=1551 width=9) (actual time=0.337..0.683 rows=1606.00 loops=1)
+                                Hash Cond: (s.match_id = m.match_id)
+                                Buffers: shared hit=36
+                                ->  Seq Scan on player_match_stats s  (cost=0.00..77.44 rows=4444 width=13) (actual time=0.008..0.264 rows=4444.00 loops=1)
+                                      Buffers: shared hit=33
+                                ->  Hash  (cost=5.65..5.65 rows=74 width=4) (actual time=0.036..0.036 rows=74.00 loops=1)
+                                      Buckets: 1024  Batches: 1  Memory Usage: 11kB
+                                      Buffers: shared hit=3
+                                      ->  Seq Scan on matches m  (cost=0.00..5.65 rows=74 width=4) (actual time=0.020..0.028 rows=74.00 loops=1)
+                                            Filter: ((tournament)::text = 'IPL 2026'::text)
+                                            Rows Removed by Filter: 138
+                                            Buffers: shared hit=3
+                          ->  Hash  (cost=8.50..8.50 rows=450 width=20) (actual time=0.086..0.086 rows=450.00 loops=1)
+                                Buckets: 1024  Batches: 1  Memory Usage: 32kB
+                                Buffers: shared hit=4
+                                ->  Seq Scan on players p  (cost=0.00..8.50 rows=450 width=20) (actual time=0.005..0.039 rows=450.00 loops=1)
+                                      Buffers: shared hit=4
+                    ->  Hash  (cost=1.18..1.18 rows=18 width=7) (actual time=0.015..0.016 rows=18.00 loops=1)
+                          Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                          Buffers: shared hit=1
+                          ->  Seq Scan on teams t  (cost=0.00..1.18 rows=18 width=7) (actual time=0.004..0.006 rows=18.00 loops=1)
+                                Buffers: shared hit=1
+Planning:
+  Buffers: shared hit=372
+Planning Time: 1.394 ms
+Execution Time: 1.928 ms
